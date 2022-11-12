@@ -7,6 +7,7 @@ export const validationAndMake = async (req, res) => {
     let tabla
     if (mdPago === 'Credito') tabla='creditcards'
     else if (mdPago === 'Debito') tabla = 'debitcard'
+    else return res.json('Aqui no hay nah')
     query = mysql.format('SELECT * FROM '+tabla+' WHERE Number = ? AND Owner = ? AND Franchise = ?', [nroTarjeta, nombre, franquicia])
     create.query( query ,(err, rows) => {
         if(err) throw err
