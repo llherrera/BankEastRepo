@@ -1,6 +1,6 @@
 import express from 'express'
 import cors from 'cors'
-import { connect, PORT } from './src/configs/index.js'
+import { PORT } from './src/configs/index.js'
 
 const app = express()
 
