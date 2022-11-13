@@ -2,7 +2,7 @@ import { create } from "../configs/db.config.js"
 import mysql from 'mysql';
 
 export const validationAndMake = async (req, res) => {
-    const {nombre, monto, mdPago, nroTarjeta, franquicia} = req.query
+    const {nombre, monto, mdPago, nroTarjeta, franquicia} = req.body
     let query
     let tabla
     if (mdPago === 'Credito') tabla='creditcards'
