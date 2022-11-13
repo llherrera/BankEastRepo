@@ -1,3 +1,3 @@
 export const sending = async (req, res) => {
-    res.send('loading...')
+    return res.status(200).json({ message: 'Inserte pagina de inicio' });
 }

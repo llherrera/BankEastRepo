@@ -3,6 +3,6 @@ import { Router } from "express";
 
 const router = Router()
 
-router.get('/', paymentController.validationAndMake)
+router.post('/', paymentController.validationAndMake)
 
 export default router
