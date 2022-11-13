@@ -7,7 +7,7 @@ export const validationAndMake = async (req, res) => {
     }
     try {
         if (monto <= 0) return res.status(400).json({ message: 'Amount must be greater than 0' });
-        let query = create.query('SELECT * FROM Card JOIN Owner ON Card.owner_id = Owner.id_owner AND Owner.name = ? AND Owner.email = ? AND Owner.DNI = ? AND Card.card_number = ?', [nombre, email, id, nroTarjeta], (err) => { if (err) return res.status(500).json(err)})
+        let query = await create.query('SELECT * FROM Card JOIN Owner ON Card.owner_id = Owner.id_owner AND Owner.name = ? AND Owner.email = ? AND Owner.DNI = ? AND Card.card_number = ?', [nombre, email, id, nroTarjeta], (err) => { if (err) return res.status(500).json(err)})
         if (query.length > 1 || query.length > 1) return res.status(400).json({message: 'Card do not exits'})
         const {exp_month, exp_year, cvv, card_type, mount} = query[0]
         //card_type = 1 es credito, y 2 es debito
