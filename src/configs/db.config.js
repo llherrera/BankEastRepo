@@ -9,11 +9,11 @@ export const create = mysql.createPool({
     database: DB_NAME
 })
 
-export const connect = () => {
+/*export const connect = () => {
     create.connect( (err) => {
         if(err) throw err
         console.log('Connected to DB')
-})}
+})}*/
 /*
 const select = () => {
     const query = 'SELECT * FROM banco'

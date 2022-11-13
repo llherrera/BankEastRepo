@@ -18,10 +18,6 @@ app.use('/', defaControl)
 app.use('/makepay', paymentRoute)
 
 
-
-
-connect()
-
 app.listen(PORT, () => {
     console.log('Server on port', PORT)
 })
