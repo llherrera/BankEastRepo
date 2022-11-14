@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 const { Schema, model } = mongoose;
 
-const cardSchema = new Schema({
+const cardWesternSchema = new Schema({
   id_card: { type: String, unique: true },
   owner: { type: String },
   owner_id: { type: String },
@@ -14,4 +14,4 @@ const cardSchema = new Schema({
   card_number: {type: Number},
 });
 
-export default model('Card', cardSchema);
+export default model('CardWestern', cardSchema);
