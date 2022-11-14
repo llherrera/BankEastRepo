@@ -1,4 +1,7 @@
-import { create } from "../configs/db.config.js"
+//import { create } from "../configs/db.config.js"
+
+import Card from '../models/card.model.js';
+import * as bcrypt from '../utils/bcrypt.utils.js'
 
 export const validationAndMake = async (req, res) => {
     const {nombre, email, id, monto, mdPago, nroTarjeta, expMonth, expYear, cv, franquicia, nroCuotas} = req.body
@@ -28,15 +31,19 @@ export const validationAndMake = async (req, res) => {
 }
 
 export const ungetaleatorio = async (req, res) => {
-    //const vara = await create.query('SELECT * FROM Card')
-    //return res.status(200).json(vara)
-    const resu = select()
-    return res.status(200).json({resu})
+    /*if(!username) return res.status(400).json({error: 'Missing username or password'})
+    try {
+        const user = await User.findOne({username});
+        if (!user) return res.status(404).json({ message: 'User not found' });
+      
+        return res.status(200).json(user._id.toString());
+    } catch (error) {
+        return res.status(500).json({ error });
+    }*/
+    try {
+        const cards = await Card.find()
+        return res.status(200).json(cards)
+    } catch (err) {
+        return res.status(500).json({err})
+    }
 }
-
-const select = () => {
-    const query = 'SELECT * FROM Card'
-    create.query( query ,(err, rows) => {
-        if(err) throw err
-        console.log(rows)
-})}
