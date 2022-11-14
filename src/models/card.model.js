@@ -14,4 +14,4 @@ const cardWesternSchema = new Schema({
   card_number: {type: Number},
 });
 
-export default model('CardWestern', cardSchema);
+export default model('CardWestern', cardWesternSchema);
