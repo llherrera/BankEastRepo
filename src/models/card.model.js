@@ -2,9 +2,9 @@ import mongoose from 'mongoose';
 const { Schema, model } = mongoose;
 
 const cardSchema = new Schema({
-  id_card: { type: Schema.Types.ObjectId, unique: true },
+  id_card: { type: String, unique: true },
   owner: { type: String },
-  owner_id: { type: Schema.Types.ObjectId },
+  owner_id: { type: String },
   exp_month: { type: String },
   exp_year: { type: String },
   cvv: {type: Number},
