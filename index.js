@@ -4,12 +4,12 @@ import 'dotenv/config'
 import { connect } from './src/configs/db.config.js'
 
 
-
 const app = express()
 
 import paymentRoute from './src/routes/payment.route.js'
-import defaControl from './src/routes/default.route.js' 
-
+import defaRoute from './src/routes/default.route.js' 
+import createRoute from './src/routes/create.route.js'
+import cardRoute from './src/routes/card.route.js'
 
 
 //Middlewares
@@ -17,13 +17,13 @@ app.use(cors())
 app.use(express.json())
 
 
-app.use('/', defaControl)
+app.use('/', defaRoute)
 app.use('/makepay', paymentRoute)
+app.use('/createUserBank', createRoute)
+app.use('/createCard', cardRoute)
 
 
 connect();
-
-
 
 
 const PORT = process.env.PORT || 3000
