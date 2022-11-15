@@ -1,4 +1,4 @@
-import CardWestern from '../models/card.model.js'
+import Card from '../models/card.model.js'
 import Owner from '../models/owner.model.js'
 
 export const checkingBalance = async (req, res) => {
@@ -6,7 +6,7 @@ export const checkingBalance = async (req, res) => {
     if (!nombre || !email || !id || !nroTarjeta) return res.status(400).json({ message: 'Missing parameters' });
     
     try {
-        const card = await CardWestern.findOne({card_number: {$eq: nroTarjeta}})
+        const card = await Card.findOne({card_number: {$eq: nroTarjeta}})
         if (card === null) return res.status(400).json({message:'Card do not exits'})
         const owner = await Owner.findOne({DNI: {$eq: id}})
         if (owner === null) return res.status(400).json({message: 'User do not exits'})
