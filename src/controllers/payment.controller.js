@@ -1,16 +1,16 @@
-import CardWestern from '../models/card.model.js'
-import OwnerWestern from '../models/owner.model.js'
+import Card from '../models/card.model.js'
+import Owner from '../models/owner.model.js'
 import * as bcrypt from '../utils/bcrypt.utils.js'
 
 export const validationAndMake = async (req, res) => {
-    const {nombre, email, id, monto, mdPago, nroTarjeta, expMonth, expYear, cv, franquicia, nroCuotas} = req.body
-    if (!nombre || !email || !id || !monto || ! mdPago || !nroTarjeta || !expMonth || !expYear || !cv || !franquicia || !nroCuotas) {
+    const {nombre, email, id, monto, mdPago, nroTarjeta, expMonth, expYear, cv, franquicia, nroCuotas, nroReferencia} = req.body
+    if (!nombre || !email || !id || !monto || ! mdPago || !nroTarjeta || !expMonth || !expYear || !cv || !franquicia || !nroCuotas || !nroReferencia) {
         return res.status(400).json({ message: 'Missing parameters' })
     }
     if (monto < 1) return res.status(400).json({ message: 'Amount must be greater than 0' })
     if (nroCuotas < 1) return res.status(400).json({message: 'Dues must be greater than 0'})
     try {
-        const card = await CardWestern.findOne({card_number: {$eq: nroTarjeta}})
+        const card = await Card.findOne({card_number: {$eq: nroTarjeta}})
         if (card === null) return res.status(400).json({message:'Card do not exits'})
         const owner = await Owner.findOne({DNI: {$eq: id}})
         if (owner === null) return res.status(400).json({message: 'User do not exits'})
@@ -26,7 +26,7 @@ export const validationAndMake = async (req, res) => {
         if (card.amount < valor) return res.status(400).json({message: 'Insufficient balance'})
         card.amount = card.amount - parseInt(valor)
         await card.save()
-        return res.status(200).json({message: 'Succesful'})
+        return res.status(200).json({message: 'Succesful', nroReferencia})
     } catch(err){
         return res.status(500).json({err})
     }
