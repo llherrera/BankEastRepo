@@ -1,5 +1,6 @@
 import Card from '../models/card.model.js'
 import Owner from '../models/owner.model.js'
+import Deal from '../models/deal.model.js'
 import * as bcrypt from '../utils/bcrypt.utils.js'
 
 export const validationAndMake = async (req, res) => {
@@ -10,6 +11,8 @@ export const validationAndMake = async (req, res) => {
     if (monto < 1) return res.status(400).json({ message: 'Amount must be greater than 0' })
     if (nroCuotas < 1) return res.status(400).json({message: 'Dues must be greater than 0'})
     try {
+        const tran = await Deal.findOne({reference_number: {$eq: nroReferencia}})
+        if (tran != null) return res.status(400).json({message: 'Transaction in process'})
         const card = await Card.findOne({card_number: {$eq: nroTarjeta}})
         if (card === null) return res.status(400).json({message:'Card do not exits'})
         const owner = await Owner.findOne({DNI: {$eq: id}})
