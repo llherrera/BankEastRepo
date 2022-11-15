@@ -4,7 +4,7 @@ import Owner from '../models/owner.model.js'
 let gen=1116
 export const createUserBank = async (req, res) => {
     const {name, email, DNI} = req.body
-    if (!nombre || !email || !DNI) return res.status(400).json({ message: 'Missing parameters' })
+    if (!name || !email || !DNI) return res.status(400).json({ message: 'Missing parameters' })
     try {
         await Owner.create({
             id_owner:gen++,
