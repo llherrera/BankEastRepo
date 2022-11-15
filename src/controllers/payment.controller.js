@@ -1,7 +1,7 @@
 import Card from '../models/card.model.js'
 import Owner from '../models/owner.model.js'
 import Deal from '../models/deal.model.js'
-import * as bcrypt from '../utils/bcrypt.utils.js'
+import * as bcrypt from '../utils/bcrypt.utils.js';
 
 export const validationAndMake = async (req, res) => {
     const {nombre, email, id, monto, mdPago, nroTarjeta, expMonth, expYear, cv, franquicia, nroCuotas, nroReferencia} = req.body
