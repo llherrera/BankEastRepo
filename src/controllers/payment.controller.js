@@ -13,7 +13,7 @@ export const validationAndMake = async (req, res) => {
     try {
         const tran = await Deal.findOne({reference_number: {$eq: nroReferencia}})
         if (tran != null) return res.status(400).json({message: 'Transaction in process'})
-        await Deal.create({reference_number: nroReferencia})
+        await Deal.create({nroReferencia})
         const card = await Card.findOne({card_number: {$eq: nroTarjeta}})
         if (card === null) return res.status(400).json({message:'Card do not exits'})
         const owner = await Owner.findOne({DNI: {$eq: id}})
