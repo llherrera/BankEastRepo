@@ -7,11 +7,12 @@ export const createUserBank = async (req, res) => {
     if (!name || !email || !DNI) return res.status(400).json({ message: 'Missing parameters' })
     try {
         await OwnerWestern.create({
-            id_owner:gen++,
+            id_owner:gen.toString(),
             name,
             email,
             DNI
         })
+        gen++
     return res.status(201).json()
   } catch (error) {
     return res.status(500).json({ error })
@@ -24,7 +25,7 @@ export const createCard = async (req, res) => {
     if (!owner || !owner_id || !exp_month || !exp_year || !cvv || !amount || !card_number || !card_franchise_id || !card_type_id) return res.status(400).json({ message: 'Missing parameters' })
     try{
         await CardWestern.create({
-            id_card:gencard++,
+            id_card:gencard.toString(),
             owner,
             owner_id,
             exp_month,
@@ -35,6 +36,7 @@ export const createCard = async (req, res) => {
             card_franchise_id,
             card_type_id
         })
+        gencard++
         return res.status(201).json()
     }catch (error) {
         return res.status(500).json({ error })
