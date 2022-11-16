@@ -1,8 +1,8 @@
 import mongoose from 'mongoose';
 const { Schema, model } = mongoose;
 
-const dealSchema = new Schema({
+const dealWesternSchema = new Schema({
   reference_number: { type: String }
 });
 
-export default model('deal', dealSchema);
+export default model('dealWestern', dealWesternSchema);
