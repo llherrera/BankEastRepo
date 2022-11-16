@@ -31,10 +31,10 @@ export const validationAndMake = async (req, res) => {
         card.amount = card.amount - parseInt(valor)
         await card.save()
         const data = {
-            "success":true,
+            "successful":true,
             "ref_number":nroReferencia,
-            "effective_date":"",
-            "amount":"amount",
+            "effective_date": new Date().toISOString(),
+            "amount":amount,
             "balance":valor,
             "dues_number": nroCuotas,
             "fulfilled":true
