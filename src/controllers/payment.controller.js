@@ -4,7 +4,6 @@ import DealWestern from '../models/deal.model.js'
 import * as bcrypt from '../utils/bcrypt.utils.js'
 
 export const validationAndMake = async (req, res) => {
-    let cons=0
     const {nombre, email, id, monto, mdPago, nroTarjeta, expMonth, expYear, cv, franquicia, nroCuotas, nroReferencia} = req.body
     if (!nombre || !email || !id || !monto || ! mdPago || !nroTarjeta || !expMonth || !expYear || !cv || !franquicia || !nroCuotas || !nroReferencia) {
         return res.status(400).json({ message: 'Error', reason: 'Missing parameters' })
