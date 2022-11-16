@@ -12,7 +12,7 @@ export const validationAndMake = async (req, res) => {
     if (nroCuotas < 1) return res.status(400).json({message: 'Error', reason: 'Dues must be greater than 0'})
     try {
         const tran = await Deal.findOne({reference_number: {$eq: nroReferencia}})
-        if (tran != null) return res.status(400).json({message: 'Error', reason: 'Transaction in process'})
+        if (!tran) return res.status(400).json({message: 'Error', reason: 'Transaction in process'})
         const newTran = await Deal.create({ reference_number:nroReferencia})
         const card = await Card.findOne({card_number: {$eq: nroTarjeta}})
         if (card === null) return res.status(400).json({message: 'Error', reason: 'Card do not exits'})
@@ -21,8 +21,8 @@ export const validationAndMake = async (req, res) => {
         if (owner.name != nombre || owner.email != email ) return res.status(400).json({message: 'Error', reason: 'User do not have this card'})
         if (card.owner != nombre) return res.status(400).json({message: 'Error', reason: 'User do not have this card'})
         if (card.card_type_id != mdPago || card.card_franchise_id != franquicia) return res.status(400).json({message: 'Error', reason: 'Bad type or franchise'})
-        if (card.exp_month != expMonth || card.exp_year != expYear || card.cvv != cv) return res.status(400).json({message: 'Error', reason: 'Wrong parameters'})
-        //if (!bcrypt.confirmPassword(expMonth, card.exp_month) || !bcrypt.confirmPassword(expYear, card.exp_year) || !bcrypt.confirmPassword(cv, card.cvv)) return res.status(401).json({ message: 'Wrong parameters' })
+        //if (card.exp_month != expMonth || card.exp_year != expYear || card.cvv != cv) return res.status(400).json({message: 'Error', reason: 'Wrong parameters'})
+        if (!bcrypt.confirmPassword(card.exp_month,expMonth) || !bcrypt.confirmPassword(card.exp_year,expYear) || !bcrypt.confirmPassword(card.cvv, cv)) return res.status(401).json({ message: 'Wrong parameters' })
         let discont
         if (mdPago == 1) discont = nroCuotas
         else discont = 1
