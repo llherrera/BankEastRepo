@@ -3,6 +3,6 @@ import { Router } from "express";
 const router = Router()
 
 router.use('/', balanceController.checkingBalance)
-router.use('/card', balanceController.checkCardBalance)
+router.use('card', balanceController.checkCardBalance)
 
 export default router
