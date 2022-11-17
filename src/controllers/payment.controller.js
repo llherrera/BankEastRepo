@@ -1,6 +1,6 @@
-import CardWestern from '../models/card.model.js'
-import OwnerWestern from '../models/owner.model.js'
-import DealWestern from '../models/deal.model.js'
+import Card from '../models/card.model.js'
+import Owner from '../models/owner.model.js'
+import Deal from '../models/deal.model.js'
 import * as bcrypt from '../utils/bcrypt.utils.js'
 
 export const validationAndMake = async (req, res) => {
@@ -11,12 +11,12 @@ export const validationAndMake = async (req, res) => {
     if (monto < 1) return res.status(400).json({ message: 'Error', reason: 'Amount must be greater than 0' })
     if (nroCuotas < 1) return res.status(400).json({message: 'Error', reason: 'Dues must be greater than 0'})
     try {
-        const tran = await DealWestern.findOne({reference_number: {$eq: nroReferencia}})
+        const tran = await Deal.findOne({reference_number: {$eq: nroReferencia}})
         if (tran != null) return res.status(400).json({message: 'Error', reason: 'Transaction in process'})
-        const newTran = await DealWestern.create({ reference_number:nroReferencia})
-        const card = await CardWestern.findOne({card_number: {$eq: nroTarjeta}})
+        const newTran = await Deal.create({ reference_number:nroReferencia})
+        const card = await Card.findOne({card_number: {$eq: nroTarjeta}})
         if (card === null) return res.status(400).json({message: 'Error', reason: 'Card do not exits'})
-        const owner = await OwnerWestern.findOne({DNI: {$eq: id}})
+        const owner = await Owner.findOne({DNI: {$eq: id}})
         if (owner === null) return res.status(400).json({message: 'Error', reason: 'User do not exits'})
         if (owner.name != nombre || owner.email != email ) return res.status(400).json({message: 'Error', reason: 'User do not have this card'})
         if (card.owner != nombre) return res.status(400).json({message: 'Error', reason: 'User do not have this card'})

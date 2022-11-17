@@ -1,19 +1,15 @@
-import CardWestern from '../models/card.model.js'
-import OwnerWestern from '../models/owner.model.js'
+import Card from '../models/card.model.js'
+import Owner from '../models/owner.model.js'
 
 export const checkingBalance = async (req, res) => {
-    const {nombre, email, id, nroTarjeta} = req.body
-    if (!nombre || !email || !id || !nroTarjeta) return res.status(400).json({ message: 'Missing parameters' });
+    const {nombre, id, nroTarjetas} = req.body
+    if (!nombre || !id || !nroTarjetas) return res.status(400).json({ message: 'Missing parameters' });
     
     try {
-        const card = await CardWestern.findOne({card_number: {$eq: nroTarjeta}})
-        if (card === null) return res.status(400).json({message:'Card do not exits'})
-        const owner = await OwnerWestern.findOne({DNI: {$eq: id}})
-        if (owner === null) return res.status(400).json({message: 'User do not exits'})
-        if (owner.name != nombre || owner.email != email ) return res.status(400).json({message: 'User do not have this card'})
-        if (card.owner != nombre) return res.status(400).json({message: 'User do not have this card'})
-        
-        return res.status(200).json({message: 'Succesful'})
+        const saldos3 = await Card.find({$or: nroTarjetas.map(i => ({
+            card_number:i
+        }))}, "amount")
+        return res.status(200).json({message: 'OK', saldos3})
     } catch(err){
         return res.status(500).json({err})
     }
