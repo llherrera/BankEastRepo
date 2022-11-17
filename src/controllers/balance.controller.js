@@ -9,6 +9,7 @@ export const checkingBalance = async (req, res) => {
         let saldos = await Card.find({$or: nroTarjetas.map(i => ({
             card_number:i
         }))}, "amount")
+        if (nroTarjetas.length != saldos.length) return res.status(400).json({message: "Error"})
         saldos = saldos.map(i => i.amount)
         return res.status(200).json({message: 'OK', saldos})
     } catch(err){
