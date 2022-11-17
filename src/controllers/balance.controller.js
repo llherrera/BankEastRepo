@@ -3,7 +3,7 @@ import Owner from '../models/owner.model.js'
 
 export const checkingBalance = async (req, res) => {
     const { nombre, id, nroTarjetas } = req.body
-    if (!nombre || !id || !nroTarjetas) return res.status(400).json({ message: 'Missing parameters', req: req.body });
+    if (!nombre || !id || !nroTarjetas) return res.status(400).json({ message: 'Missing parameters' });
 
     let owner,saldos;
     try {
