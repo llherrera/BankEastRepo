@@ -4,42 +4,93 @@ import Deal from '../models/deal.model.js'
 import * as bcrypt from '../utils/bcrypt.utils.js'
 
 export const validationAndMake = async (req, res) => {
-    const {nombre, email, id, monto, mdPago, nroTarjeta, expMonth, expYear, cv, franquicia, nroCuotas, nroReferencia} = req.body
-    if (!nombre || !email || !id || !monto || ! mdPago || !nroTarjeta || !expMonth || !expYear || !cv || !franquicia || !nroCuotas || !nroReferencia) {
-        return res.status(400).json({ message: 'Error', reason: 'Missing parameters' })
+    const { nombre, email, id, monto, mdPago, nroTarjeta, expMonth, expYear, cv, franquicia,
+        nroCuotas, nroReferencia } = req.body
+
+    // create minimal data response
+    const data = {
+        'reference_number': nroReferencia,
+        'amount': monto,
+        'balance': monto / (mdPago == 1 ? nroCuotas : 1),
+        'successful': false,
+        'fulfilled': false,
+        'dues_number': nroCuotas,
+        'effective_date': new Date().toISOString()
+    };
+    
+    // basic validations
+    if (!nombre || !email || !id || !monto || !mdPago || !nroTarjeta || !expMonth || !expYear || !cv
+            || !franquicia || !nroCuotas || !nroReferencia) {
+        
+        return res.status(400).json({
+            message: 'Error', reason: 'Data received was not enough to process transaction', data
+        })
     }
-    if (monto < 1) return res.status(400).json({ message: 'Error', reason: 'Amount must be greater than 0' })
-    if (nroCuotas < 1) return res.status(400).json({message: 'Error', reason: 'Dues must be greater than 0'})
+    if (monto < 1) return res.status(400).json({
+        message: 'Error', reason: 'Amount must be greater than zero', data
+    })
+    if (nroCuotas < 1) return res.status(400).json({
+        message: 'Error', reason: 'Dues must be greater than zero', data
+    })
+
+    // check if transaction with given ref_number was already processed before
+    let tran;
     try {
-        const tran = await Deal.findOne({reference_number: {$eq: nroReferencia}})
-        if (tran != null) return res.status(400).json({message: 'Error', reason: 'Transaction in process'})
-        const newTran = await Deal.create({ reference_number:nroReferencia})
-        const card = await Card.findOne({card_number: {$eq: nroTarjeta}})
-        if (card === null) return res.status(400).json({message: 'Error', reason: 'Card do not exits'})
-        const owner = await Owner.findOne({DNI: {$eq: id}})
-        if (owner === null) return res.status(400).json({message: 'Error', reason: 'User do not exits'})
-        if (owner.name != nombre || owner.email != email ) return res.status(400).json({message: 'Error', reason: 'User do not have this card'})
-        if (card.owner != nombre) return res.status(400).json({message: 'Error', reason: 'User do not have this card'})
-        if (card.card_type_id != mdPago || card.card_franchise_id != franquicia) return res.status(400).json({message: 'Error', reason: 'Bad type or franchise'})
-        if (!bcrypt.confirmPassword(card.exp_month, expMonth) || !bcrypt.confirmPassword( card.exp_year, expYear) || !bcrypt.confirmPassword( card.cvv, cv)) return res.status(401).json({ message: 'Wrong parameters' })
-        let discont
-        if (mdPago == 1) discont = nroCuotas
-        else discont = 1
-        const valor = monto/discont
-        if (card.amount < valor) return res.status(400).json({message: 'Error', reason: 'Insufficient balance'})
-        card.amount = card.amount - parseInt(valor)
-        await card.save()
-        const data = {
-            "successful":true,
-            "ref_number":nroReferencia,
-            "effective_date": new Date().toISOString(),
-            "amount":monto,
-            "balance":valor,
-            "dues_number": nroCuotas,
-            "fulfilled":true
+        tran = await Deal.findOne({ reference_number: nroReferencia })
+    } catch (err) {
+        return res.status(500).json({ message: 'Error', reason: 'Internal server error', data });
+    }
+    if (tran) return res.status(400).json({
+        message: 'OK',
+        reason: 'Transaction already processed',
+        data: { ...tran, effective_date: tran.effective_date.toISOString() }
+    })
+
+    try {
+        const deal = await Deal.create({ ...data, effective_date: new Date() });
+
+        const card = await Card.findOne({ card_number: nroTarjeta })
+        if (!card) return res.status(400).json({
+            message: 'Error', reason: 'Card does not exist in database', data
+        })
+
+        const owner = await Owner.findOne({ DNI: id })
+        if (!owner) {
+            return res.status(400).json({
+                message: 'Error', reason: 'Person with this document number does not exist in database', data
+            })
         }
-        return res.status(200).json({message: 'OK', reason: 'Succesful', data})
-    } catch(err){
-        return res.status(500).json({err})
+        if (owner.name !== nombre || owner.email !== email) {
+            return res.status(400).json({
+                message: 'Error', reason: 'Person name or email doesn\'t match', data
+            })
+        }
+        if (card.owner !== nombre) {
+            return res.status(400).json({
+                message: 'Error', reason: 'Person does not own this card', data
+            })
+        }
+        if (card.card_type_id !== mdPago || card.card_franchise_id !== +franquicia) {
+            return res.status(400).json({ message: 'Error', reason: 'Bad type or franchise', data })
+        }
+        if (!bcrypt.confirmPassword(card.exp_month, expMonth) || 
+            !bcrypt.confirmPassword(card.exp_year, expYear) || !bcrypt.confirmPassword(card.cvv, cv)) {
+            
+            return res.status(401).json({ message: 'Error', reason: 'Card authentication failed', data })
+        }
+        if (card.amount < deal.balance) {
+            return res.status(400).json({ message: 'Error', reason: 'Insufficient balance', data })
+        }
+
+        card.amount = card.amount - parseInt(deal.balance)
+        await card.save()
+
+        deal.successful = true;
+        if (deal.amount === deal.balance) deal.fulfilled = true;
+        await deal.save();
+
+        return res.status(200).json({ message: 'OK', reason: 'Transaccion successful', data: deal })
+    } catch (err) {
+        return res.status(500).json({ message: 'Error', reason: 'Internal bank error', data })
     }
 }
