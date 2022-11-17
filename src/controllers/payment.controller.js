@@ -70,10 +70,8 @@ export const validationAndMake = async (req, res) => {
                 message: 'Error', reason: 'Person does not own this card', data
             })
         }
-        if (card.card_type_id !== mdPago || card.card_franchise_id !== franquicia) {
-            return res.status(400).json({ message: 'Error', reason: 'Bad type or franchise', data, extra: {
-                card_type_id: card.card_type_id, mdPago, card_franchise_id: card.card_franchise_id, franquicia
-            } })
+        if (card.card_type_id !== mdPago || card.card_franchise_id !== +franquicia) {
+            return res.status(400).json({ message: 'Error', reason: 'Bad type or franchise', data })
         }
         if (!bcrypt.confirmPassword(card.exp_month, expMonth) || 
             !bcrypt.confirmPassword(card.exp_year, expYear) || !bcrypt.confirmPassword(card.cvv, cv)) {
