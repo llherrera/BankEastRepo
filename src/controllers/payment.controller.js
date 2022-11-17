@@ -89,7 +89,7 @@ export const validationAndMake = async (req, res) => {
         if (deal.amount === deal.balance) deal.fulfilled = true;
         await deal.save();
 
-        return res.status(200).json({ message: 'OK', reason: 'Transaccion successful', data })
+        return res.status(200).json({ message: 'OK', reason: 'Transaccion successful', data: deal })
     } catch (err) {
         return res.status(500).json({ message: 'Error', reason: 'Internal bank error', data })
     }
