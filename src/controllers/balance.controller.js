@@ -42,8 +42,7 @@ export const checkCardBalance = async (req, res) => {
     let owner, card;
     try {
         owner = await Owner.findOne({ DNI: id, name: nombre });
-        // card = await Card.findOne({ card_number: nroTarjeta, owner_id: owner.owner_id });
-        card = await Card.findOne({ card_number: nroTarjeta });
+        card = await Card.findOne({ card_number: nroTarjeta, owner_id: owner.id_owner });
     } catch (err) {
         return res.status(500).json({ message: 'Error' });
     }
