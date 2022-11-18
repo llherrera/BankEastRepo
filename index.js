@@ -20,8 +20,8 @@ app.use(express.json())
 
 
 app.use('/', defaRoute)
-app.use('/makepay', paymentRoute)
-app.use('/checkbalance', balanceRoute)
+app.post('/makepay', paymentRoute)
+app.post('/checkbalance', balanceRoute)
 
 app.use('/createUserBank', createRoute) //
 app.use('/createCard', cardRoute)       //
