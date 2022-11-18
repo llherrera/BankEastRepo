@@ -43,7 +43,7 @@ export const validationAndMake = async (req, res) => {
     if (tran) return res.status(400).json({
         message: 'OK',
         reason: 'Transaction already processed',
-        data: { ...tran, effective_date: tran.effective_date.toISOString() }
+        data: { ...tran._doc, effective_date: tran.effective_date.toISOString() }
     })
 
     try {
