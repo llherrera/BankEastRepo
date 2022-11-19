@@ -11,4 +11,4 @@ const dealSchema = new Schema({
     fulfilled: { type: Boolean }
 });
 
-export default model('deal', dealSchema);
+export default model('dealWestern', dealSchema);

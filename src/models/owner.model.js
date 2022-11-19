@@ -8,4 +8,4 @@ const ownerSchema = new Schema({
   DNI: { type: String, unique: true },
 });
 
-export default model('Owner', ownerSchema);
+export default model('OwnerWestern', ownerSchema);
