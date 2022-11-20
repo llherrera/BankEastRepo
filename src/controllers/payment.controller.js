@@ -82,8 +82,11 @@ export const validationAndMake = async (req, res) => {
             return res.status(400).json({ message: 'Error', reason: 'Insufficient balance', data })
         }
 
+        const cardUni = await Card.findOne({owner: {$eq: "Universidad"}})
+
         card.amount = card.amount - parseInt(deal.balance)
-        await card.save()
+        cardUni.amount = cardUni.amount + monto
+        await card.save(), cardUni.save()
 
         deal.successful = true;
         if (deal.amount === deal.balance) deal.fulfilled = true;
