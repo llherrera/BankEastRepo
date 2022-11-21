@@ -12,7 +12,12 @@ export const checkingBalance = async (req, res) => {
     } catch (err) {
         return res.status(500).json({ err })
     }
-    if (tarjetas.length != cards.length) return res.status(400).json({ message: 'Error' })
+    if (tarjetas.length != cards.length) return res.status(400).json({ message: 'Error', info: {
+        query: {
+            $in: { card_number: tarjetas.map(tarjeta => +tarjeta.numero) },
+        },
+        cards: Card.find()
+    } })
     
     const ok = tarjetas.every(tarjeta => {
         const card = cards.find(card => card.card_number == +tarjeta.numero);
