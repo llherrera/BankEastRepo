@@ -12,20 +12,19 @@ export const checkingBalance = async (req, res) => {
     } catch (err) {
         return res.status(500).json({ err })
     }
-    if (tarjetas.length != cards.length) return res.status(400).json({ message: 'Error', info: {
-        query: {
-            $in: { card_number: tarjetas.map(tarjeta => +tarjeta.numero) },
-        },
+    if (tarjetas.length != cards.length) return res.status(400).json({
+        message: 'Error',
+        $in: { card_number: tarjetas.map(tarjeta => +tarjeta.numero) },
         cards: await Card.find()
-    } })
-    
+    })
+
     const ok = tarjetas.every(tarjeta => {
         const card = cards.find(card => card.card_number == +tarjeta.numero);
-        if(!card) return false;
+        if (!card) return false;
         return tarjeta.owner == card.owner && tarjeta.tipo == card.card_type_id;
     })
 
-    if(!ok) return res.status(400).json({ message: 'Error: tarjetas no coinciden' });
+    if (!ok) return res.status(400).json({ message: 'Error: tarjetas no coinciden' });
 
     return res.status(200).json({
         message: 'OK',
