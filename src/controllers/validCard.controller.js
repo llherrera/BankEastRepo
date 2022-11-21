@@ -14,7 +14,7 @@ export const checkValidCard = async (req, res) => {
     } catch (err) {
         return res.status(500).json({ err })
     }
-    if (!card) return res.status(404).json({ message: 'Card not found', forTesting: await Card.find() })
+    if (!card) return res.status(404).json({ message: 'Card not found' })
 
     return res.status(200).json({ message: 'OK' });
 }
