@@ -1,7 +1,7 @@
 import Card from '../models/card.model.js'
 import Owner from '../models/owner.model.js'
 
-let gen=1116
+let gen=1121
 export const createUserBank = async (req, res) => {
     const {name, email, DNI} = req.body
     if (!name || !email || !DNI) return res.status(400).json({ message: 'Missing parameters' })
@@ -19,7 +19,7 @@ export const createUserBank = async (req, res) => {
   }
 }
 
-let gencard=2114
+let gencard=2117
 export const createCard = async (req, res) => {
     const {owner, owner_id, exp_month, exp_year, cvv, amount, card_number, card_franchise_id, card_type_id} = req.body
     if (!owner || !owner_id || !exp_month || !exp_year || !cvv || !amount || !card_number || !card_franchise_id || !card_type_id) return res.status(400).json({ message: 'Missing parameters' })
