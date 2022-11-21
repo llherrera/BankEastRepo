@@ -12,7 +12,7 @@ export const checkingBalance = async (req, res) => {
     } catch (err) {
         return res.status(500).json({ err })
     }
-    if (tarjetas.length != cards.length) return res.status(400).json({ message: 'Error', info: tarjetas })
+    if (tarjetas.length !== cards.length) return res.status(400).json({ message: 'Error: tarjetas no encontradas' })
     
     const ok = tarjetas.every(tarjeta => {
         const card = cards.find(card => card.card_number == +tarjeta.numero);
