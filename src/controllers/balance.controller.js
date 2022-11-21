@@ -7,7 +7,7 @@ export const checkingBalance = async (req, res) => {
     let cards;
     try {
         cards = await Card.find({
-            $in: { card_number: tarjetas.map(tarjeta => tarjeta.numero) },
+            $in: { card_number: tarjetas.map(tarjeta => +tarjeta.numero) },
         }, 'amount owner card_number card_type_id');
     } catch (err) {
         return res.status(500).json({ err })
