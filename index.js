@@ -8,6 +8,7 @@ const app = express()
 import paymentRoute from './src/routes/payment.route.js'
 import defaRoute from './src/routes/default.route.js' 
 import balanceRoute from './src/routes/balance.route.js'
+import cardExistsRoute from './src/routes/cardExists.route.js'
 
 import createRoute from './src/routes/create.route.js'
 import cardRoute from './src/routes/card.route.js'
